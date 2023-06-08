@@ -1,4 +1,4 @@
-﻿using System.Numerics;
+using System.Numerics;
 using System.IO;
 
 class Program
@@ -69,7 +69,7 @@ static void GenerateKeyPair()
     BigInteger q = GetPrime();
     BigInteger n = p * q;
     BigInteger phi = (p - 1) * (q - 1);
-    BigInteger e = 65537;
+    BigInteger e = GetPrime();
     BigInteger d = ModInverse(e, phi);
 
     // Write public key to file
@@ -94,34 +94,79 @@ static void GenerateKeyPair()
         Random random = new Random();
         BigInteger n = BigInteger.Pow(2, 2048) + random.Next(0, int.MaxValue);
 
-        // Test if number is prime
-        while (!IsPrime(n))
+        // Make sure the number is odd
+        if (n % 2 == 0)
         {
             n++;
         }
 
+        // Perform Miller-Rabin primality test
+        while (!IsPrime(n))
+        {
+            n += 2; // Increment by 2 to maintain oddness
+        }
+
         return n;
     }
-
+    
     static bool IsPrime(BigInteger n)
     {
-        // Check if n is even
-        if (n % 2 == 0)
+        if (n <= 1)
         {
             return false;
         }
 
-        // Test if n is prime using Fermat's little theorem
-        for (int i = 0; i < 100; i++)
+        if (n <= 3)
         {
-            BigInteger a = RandomBigInteger(n - 2) + 1;
-            if (ModPow(a, n - 1, n) != 1)
+            return true;
+        }
+
+        int[] primesToTest = { 2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37 };
+
+        foreach (int prime in primesToTest)
+        {
+            if (!MillerRabinTest(n, prime))
             {
                 return false;
             }
         }
 
         return true;
+    }
+    static bool MillerRabinTest(BigInteger n, int witness)
+    {
+        BigInteger d = n - 1;
+        int s = 0;
+
+        while (d % 2 == 0)
+        {
+            d /= 2;
+            s++;
+        }
+
+        BigInteger x = BigInteger.ModPow(witness, d, n);
+
+        if (x == 1 || x == n - 1)
+        {
+            return true;
+        }
+
+        for (int i = 1; i < s; i++)
+        {
+            x = BigInteger.ModPow(x, 2, n);
+
+            if (x == n - 1)
+            {
+                return true;
+            }
+
+            if (x == 1)
+            {
+                return false;
+            }
+        }
+
+        return false;
     }
 
     static BigInteger RandomBigInteger(BigInteger max)
