@@ -1,4 +1,4 @@
-# LES-RSA
+# Leef Encryption System
 A complete implementation of the RSA algorithm including a CLI tool in pure C#.
 Basically an encryption algorithm secured by the fact it's "hard" to factor semi-prime numbers.
 
