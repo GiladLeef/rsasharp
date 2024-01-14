@@ -1,6 +1,6 @@
 # LES Algorithm
 
-The LES (Leef Encryption System) is a simple implementation of the RSA algorithm. It allows users to generate key pairs, encrypt plaintext, and decrypt ciphertext.
+This is a simple implementation of the RSA algorithm. It allows users to generate key pairs, encrypt plaintext, and decrypt ciphertext.
 
 ## Usage
 
