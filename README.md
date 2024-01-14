@@ -1,4 +1,4 @@
-# AES Algorithm
+# RSA Algorithm
 
 This is a simple implementation of the RSA algorithm. It allows users to generate key pairs, encrypt plaintext, and decrypt ciphertext.
 
